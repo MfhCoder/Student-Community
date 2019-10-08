@@ -1,0 +1,43 @@
+﻿@model IQueryable<StudentsCommunity.ViewModels.MessagesVM>
+@using StudentsCommunity.ViewModels;
+@using Microsoft.AspNet.Identity
+@using Microsoft.AspNet.Identity.EntityFramework;
+@using StudentsCommunity.Models;
+
+@{   
+    var UserId = User.Identity.GetUserId();
+}
+@if (Model != null)
+{
+
+    foreach (MessagesVM Message in Model)
+    {
+        if (Message.Users.UserID == UserId)
+        {           <li>
+        <div class="message-data">
+            <span class="message-data-name">
+<i class="fa fa-circle online"></i> @Message.Users.Username</span>
+            <span class="message-data-time">@Message.Date</span>
+        </div>
+        <div class="message my-message">
+            @Message.Msg
+        </div>
+    </li>}
+        else { 
+    <li class="clearfix">
+        <div class="message-data align-right">
+            <span class="message-data-time">@Message.Date</span> &nbsp; &nbsp;
+            <span class="message-data-name">@Message.Users.Username</span>
+            <img src="~/Uploads/@Message.Users.imageProfile" alt="avatar" class="rounded-circle img-thumbnail bg-info " style="width: 60px; padding:3px" />
+             <i class="fa fa-circle me"></i>
+        </div>
+        <div class="message other-message float-right">
+            @Message.Msg
+        </div>
+    </li>
+        }
+
+    }
+
+
+}

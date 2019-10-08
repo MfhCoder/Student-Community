@@ -1,0 +1,67 @@
+﻿@model IQueryable<StudentsCommunity.ViewModels.UsersInCourseVM>
+@using Microsoft.AspNet.Identity
+@using Microsoft.AspNet.Identity.EntityFramework;
+@using StudentsCommunity.Models;
+
+@{
+    ViewBag.Title = "UsersNotInTeams";
+}
+
+@{var ID = Url.RequestContext.RouteData.Values["id"]; }
+
+@if (Model != null)
+{
+    foreach (var UsersInCourse in Model)
+    {
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title text-center" id="myModalLabel">More About @UsersInCourse.Users.Username</h4>
+                    </div>
+                    <div class="modal-body">
+                        <center>
+                            <img src="~/Uploads/@UsersInCourse.Users.imageProfile" name="aboutme" width="140" height="140" border="0" class="rounded-circle">
+                            <h3 class="media-heading">@UsersInCourse.Users.Username</h3>
+                            <span><strong>Skills: </strong></span>
+                            <span class="badge badge-warning">HTML5/CSS</span>
+                            <span class="badge badge-info">php</span>
+                            <span class="badge badge-info">bootstrap</span>
+                            <span class="badge badge-success">javascript</span>
+                        </center>
+                        <hr>
+                            <strong>Email </strong>
+                            <p>@UsersInCourse.Users.Email</p> 
+                            <strong>Phone </strong>
+                            <p>@UsersInCourse.Users.Phone</p>                          
+                    </div>
+                    <div class="modal-footer">
+                        <center>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </center>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card card-default" style="width: 80%;">
+            <div class="card-body">
+                <div class="avatar">
+                    <img src="~/Uploads/@UsersInCourse.Users.imageProfile" class="rounded-circle" style="width: 60px;" />
+                    <span>
+                        <a href="#aboutModal" data-toggle="modal" data-target="#myModal" style="font-weight:bold" class="text-primary">@UsersInCourse.Users.Username</a>
+                    </span>
+                    <a href="@Url.Action("MYTeams", "Teams", new { id = ID } )" class="btn btn-primary pull-right">
+                        Add to team <span class="fa fa-plus" aria-hidden="true"></span>
+                    </a>
+                    <a href="@Url.Action("AddConversation", "Conversations", new { id = 1, ToId = UsersInCourse.Users.UserID, TeamId=0 } )" class="btn btn-success pull-right" style="margin-right:2px">
+                         Start Conversation <span class="fa fa-comments" aria-hidden="true"></span>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+
+    }
+}

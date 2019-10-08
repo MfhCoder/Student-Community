@@ -1,0 +1,52 @@
+﻿@model IQueryable<StudentsCommunity.ViewModels.SubCommentsVM>
+@using StudentsCommunity.ViewModels
+@using Microsoft.AspNet.Identity
+@using Microsoft.AspNet.Identity.EntityFramework;
+@using StudentsCommunity.Models;
+
+
+
+
+@{    var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+
+    var currentUser = manager.FindById(User.Identity.GetUserId());
+}
+    @if (Model != null)
+    {
+
+        foreach (SubCommentsVM subComment in Model)
+        {<li>
+        <!-- Avatar -->
+        <div class="comment-avatar"><img src="~/Uploads/@subComment.User.imageProfile" /></div>
+        <!-- Contenedor del Comentario -->
+        <div class="comment-box">
+            <div class="comment-head">
+                <h6 class="comment-name text-primary"><a href="">@subComment.User.Username</a></h6>
+                <time class="timeago" style="margin-top: 27px; font-size: 13px; color: #9c9898;  margin-left: 4px;" datetime="@subComment.CommentedDate">@subComment.CommentedDate</time>
+                @{if (manager.GetRoles(subComment.User.UserID).Contains("Instructors"))
+                    {
+                        <span class="badge badge-info"> Instructor</span><br />
+
+                    }
+                }
+                <i class="fa fa-heart"></i>
+            </div>
+            <div class="comment-content">
+                @subComment.CommentMsg
+            </div>
+        </div>
+    </li>
+
+        }
+    }
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        jQuery("time.timeago").timeago();
+    });
+
+</script>
+
+

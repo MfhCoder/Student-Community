@@ -1,0 +1,33 @@
+﻿@model StudentsCommunity.Models.Enrollment
+
+@{
+    ViewBag.Title = "GetCourse";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+@using (Html.BeginForm("GetCourse", "Enrollments", FormMethod.Post))
+{  
+    <div class="form">
+        <div class="note">
+            <p>GetCourse</p>
+        </div>
+        <div class="form-content">
+            @Html.ValidationMessage("IsCourseRegistered", new { @class = " text-danger" })
+            @Html.ValidationMessage("CourseCode", new { @class = " text-danger" })
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="form-group">
+                <div class="col-md-4">
+                    @Html.DropDownList("CoursesId", (IEnumerable<SelectListItem>)ViewBag.CoursesId, htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.CoursesId, "", new { @class = "text-danger" })
+                    <input type="text" class="form-control input-lg" name="CourseCode" placeholder="CourseCode" required = "required"/><br />
+                </div>
+                <input type="submit" class="btnSubmit" value="Register" />
+            </div>
+        </div>
+    </div>
+
+}
+
+

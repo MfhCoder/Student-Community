@@ -1,0 +1,293 @@
+﻿@model StudentsCommunity.Models.Courses
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{var ID = Url.RequestContext.RouteData.Values["id"]; }
+
+<div>
+</div>
+<div>
+    <h4 class="note">
+        @Html.DisplayFor(model => model.CourseName)
+   </h4>
+   <div class="row">
+        <div class="col-md-10">
+            <ul class="nav nav-tabs" role="tablist" style="margin:20px">
+
+                <li class="nav-item">
+                    <a class="nav-link active text-primary" href="#Course1" role="tab" data-toggle="tab">Statistics</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-primary" href="#Course2" role="tab" data-toggle="tab">Information</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-primary" href="@Url.Action("Download", "Courses", new { id = Model.Id } )" >Resources</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-primary" href="@Url.Action("GetAllPosts", "Comments", new { id = ID } )" >Posts</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-primary" href="@Url.Action("SelectQuizz", "Quizz", new { id = ID } )">Quizzes</a>
+                </li>
+
+                @if (User.IsInRole("Students"))
+                {
+                    <li class="nav-item">
+                        <a class="nav-link text-primary" href="@Url.Action("MyTeams", "Teams", new { id = ID } )">My Team</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-primary" href="@Url.Action("UsersNotInTeams", "Teams", new { id = ID } )">Complete your team</a>
+                    </li>
+                }
+                @if (User.IsInRole("Instructors"))
+
+                {
+                    <li class="nav-item">
+                        <a class="nav-link text-primary" href="@Url.Action("createQuiz", "Quizz", new { id = ID } )">Make a Quiz</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-primary" href="@Url.Action("UsersInCourse", "Courses", new { id = ID } )">All Students</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-primary" href="@Url.Action("Teams", "Teams", new { id = ID } )">Teams</a>
+                    </li>
+                }
+            </ul>
+
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane fade show active" id="Course1">
+                        <div class="row">
+                            <div class="col-md-4 col-sm-6 col-xs-12">
+                                <div class="info-box">
+                                    <span class="info-box-icon bg-aqua"><i class="fa fa-user"></i></span>
+                                    <a class="nav-link text-primary" href="@Url.Action("UsersInCourse", "Courses", new { id = ID } )">
+                                        <div class="info-box-content">
+                                            <span class="info-box-text">Total students</span>
+                                            <span class="info-box-number">@ViewBag.TotalStudents</span>
+                                        </div>
+                                    </a>
+                                    <!-- /.info-box-content -->
+                                </div>
+                                <!-- /.info-box -->
+                            </div>
+                            <!-- /.col -->
+                            <div class="col-md-4 col-sm-6 col-xs-12">
+                                <div class="info-box">
+                                    <span class="info-box-icon bg-red"><i class="fa fa-users"></i></span>
+                                        <a class="nav-link text-primary" href="@Url.Action("Teams", "Teams", new { id = ID } )">
+                                            <div class="info-box-content">
+                                            <span class="info-box-text">Total teams</span>
+                                            <span class="info-box-number">@ViewBag.TotalTeams</span>
+                                            </div>
+                                        </a>
+                                    <!-- /.info-box-content -->
+                                </div>
+                                <!-- /.info-box -->
+                            </div>
+                            <!-- /.col -->
+                            <!-- /.col -->
+                            <div class="col-md-4 col-sm-6 col-xs-12">
+                                <div class="info-box">
+                                    <span class="info-box-icon bg-red"><i class="fa fa-newspaper-o"></i></span>
+                                        <a class="nav-link text-primary" href="@Url.Action("GetAllPosts", "Comments", new { id = ID } )">
+                                            <div class="info-box-content">
+                                                <span class="info-box-text">Total Posts</span>
+                                                <span class="info-box-number">@ViewBag.TotalPosts</span>
+                                            </div>
+                                    </a>
+                                    <!-- /.info-box-content -->
+                                </div>
+                                <!-- /.info-box -->
+                            </div>
+                            <!-- /.col -->
+
+                        </div>
+                        <div class="row">
+                            <div id="chartdiv1" style="height: 400px; width: 500px;"></div>
+                            <div id="chartdiv2" style="height: 400px; width: 500px;"></div>
+                        </div>
+                </div>
+ 
+                <div role="tabpanel" class="tab-pane fade" id="Course2">
+
+                    <table class="table table-striped table-bordered table-inverse" style="width:100%">
+                        <tbody>
+
+                            <tr>
+                                <td>
+                                    Description
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+@Html.Raw(HttpUtility.HtmlDecode(Model.Description))   
+                                   </td>
+                            </tr>
+                            <tr>
+
+                                <td>
+                                    General Information
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    Having successfully completed this course, the student will be able to:
+                                    1. Apply advance C programming techniques such as pointers, dynamic memory allocation, structures to developing solutions for particular problems;
+                                    2. Design and implement abstract data types such as linked list, stack, queue and tree by using C as the programming language using static or dynamic implementations;
+                                    3. Analyze, evaluate and choose appropriate abstract data types to solve particular problems;
+                                    4. Design and implement C programs that apply abstract data types.
+                                </td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+    @if (User.IsInRole("Instructors"))
+    {
+<div class="form-actions no-color">
+    <a href="@Url.Action("MyCourses", "Courses")" class='btn btn-info btn-xs'>
+        <i class="fa fa-arrow-left"></i>
+        back
+    </a>
+    <a href="@Url.Action("Edit", "Courses", new { id = Model.Id } )" class='btn btn-success btn-xs'>
+        <i class="fa fa-edit"> Edit</i>
+    </a>
+    <a href="@Url.Action("Upload", "Courses", new { id = Model.Id } )" class='btn btn-primary btn-xs'>
+        Upload Resources
+    </a>
+    <a href="@Url.Action("CreateQuiz", "Quizz", new { id = Model.Id } )" class='btn btn-primary btn-xs'>
+        Make a quiz
+    </a>
+</div>
+    }
+
+</div>
+
+
+
+@section scripts {
+
+    <!-- CSS  -->
+    <link href="~/Content/jquery.jqplot.css" rel="stylesheet" />
+
+    <!-- Scripts JS  -->
+    <script src="~/Scripts/jquery.min.js"></script>
+    <script src="~/Scripts/jquery.jqplot.min.js"></script>
+    <script src="~/Scripts/jqplot.pieRenderer.js"></script>
+
+
+
+    <script type="text/javascript">
+
+
+
+        $(document).ready(function () {
+
+            Pie1();
+            Pie2();
+
+            function Pie1() {   //GetPieRenderer1
+            $.ajax({
+                type: "POST",
+                url:'@Url.Action("GetPieRenderer1", "Courses")',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: OnSuccess,
+                error: OnError
+            });
+
+            function OnSuccess(response) {
+
+                var aData = response;
+                var dataArray = [];
+
+                $.each(aData, function (i, item) {
+                    dataArray.push([item.Response_NAME, item.Response_Number]);
+                });
+
+
+
+                var plot1 = jQuery.jqplot('chartdiv1', [dataArray],
+                    {
+                        seriesDefaults: {
+                            // Make this a pie chart.
+                            renderer: jQuery.jqplot.PieRenderer,
+                            rendererOptions: {
+                                sliceMargin: 4,
+                                // Put data labels on the pie slices.
+
+                                showDataLabels: true
+                            }
+                        },
+                        legend: { show: true, location: 'e' }
+                    }
+                );
+
+            }
+            function OnError(response) {
+                alert("Error !");
+            }
+
+            }
+
+            function Pie2() {
+            //GetPieRenderer2
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetPieRenderer2", "Courses")',
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: OnSuccess,
+                error: OnError
+            });
+
+            function OnSuccess(response) {
+
+                var aData = response;
+                var dataArray = [];
+
+                $.each(aData, function (i, item) {
+                    dataArray.push([item.Response_NAME, item.Response_Number]);
+                });
+
+
+
+                var plot1 = jQuery.jqplot('chartdiv2', [dataArray],
+                    {
+                        seriesDefaults: {
+                            // Make this a pie chart.
+                            renderer: jQuery.jqplot.PieRenderer,
+                            rendererOptions: {
+
+    seriesColors: [ "#4bb2c5", "#c5b47f"],
+                                sliceMargin: 4,
+                                // Put data labels on the pie slices.
+
+                                showDataLabels: true
+                            }
+                        },
+                        legend: { show: true, location: 'e' }
+                    }
+                );
+
+            }
+            function OnError(response) {
+                alert("Error !");
+            }
+            }
+
+        });
+
+    </script>
+
+}  

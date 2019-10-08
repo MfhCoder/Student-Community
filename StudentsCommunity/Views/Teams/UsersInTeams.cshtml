@@ -1,0 +1,64 @@
+﻿@model IQueryable<StudentsCommunity.ViewModels.UsersInTeamsVM>
+@using Microsoft.AspNet.Identity
+@using Microsoft.AspNet.Identity.EntityFramework;
+@using StudentsCommunity.Models;
+
+@{
+    ViewBag.Title = "UsersInTeams";
+}
+
+
+@{var ID = Url.RequestContext.RouteData.Values["id"];
+
+    var Converstion = ViewBag.Converstion as IEnumerable<StudentsCommunity.Models.Conversation>;
+}
+
+<div class="card card-default" style="width: 80%;">
+    <div class="card-header">
+        @*<a href="@Url.Action("AddToTeam", "Teams", new { id = ID } )" class="btn btn-primary pull-right">
+            Add New Member <span class="fa fa-plus" aria-hidden="true"></span>
+        </a>*@
+        @if (Converstion.Any())
+            {
+            <a href="@Url.Action("GetConversations", "Conversations", new { Id = Converstion.FirstOrDefault().Id } )" class="btn btn-success pull-right" style="margin-right:2px">
+                Conversation <span class="fa fa-comments" aria-hidden="true"></span>
+            </a>
+        }
+        else
+        {
+            <a href="@Url.Action("AddConversation", "Conversations", new { id = 1, TeamId = ID } )" class="btn btn-success pull-right" style="margin-right:2px">
+                Start Conversation <span class="fa fa-comments" aria-hidden="true"></span>
+            </a>
+        }
+
+    </div>
+
+
+
+    <div class="card-body">
+        <div class="row">
+            @if (Model != null)
+            {
+                foreach (var UsersInTeams in Model)
+                {
+                    <div class="items col-xs-12 col-sm-6 col-md-6 col-lg-6 clearfix">
+                        <div class="info-block block-info clearfix">
+                            <div class="square-box pull-left">
+                                <img src="~/Uploads/@UsersInTeams.Users.imageProfile" style="width: 100%;" />
+                            </div>
+                            @*<a href="@Url.Action("MYTeams", "Teams", new { id = ID } )" class="btn btn-primary pull-right">
+                                    Add to team <span class="fa fa-plus" aria-hidden="true"></span>
+                                </a>*@
+                            <h5>Name:<a href="" style="font-weight:bold" class="text-primary"> @UsersInTeams.Users.Username</a></h5>
+                            <p>Phone: @UsersInTeams.Users.Phone</p>
+                            <p>Email: @UsersInTeams.Users.Email</p>
+                        </div>
+                    </div>
+
+
+                }
+            }
+
+        </div>
+    </div>
+</div>

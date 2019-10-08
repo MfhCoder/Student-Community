@@ -1,0 +1,52 @@
+﻿@model StudentsCommunity.Models.Enrollment
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div>
+    <h4 class="note">Course Information</h4>
+
+    <table class="table table-striped table-bordered table-inverse" style="width:100%">
+        <tbody>
+
+
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.Courses.CourseName)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => model.Courses.CourseName)
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.Courses.CourseCode)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => model.Courses.CourseCode)
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.Courses.GroupNum)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => model.Courses.GroupNum)
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+        <div class="form-actions no-color">
+            <a href="@Url.Action("MyCourses", "Courses")" class='btn btn-info btn-xs'>
+                <i class="fa fa-arrow-left"></i>
+                back
+            </a>
+            <a href="@Url.Action("Edit", "Courses", new { id = Model.Id } )" class='btn btn-success btn-xs'>
+                <i class="fa fa-edit"> Edit</i>
+            </a>
+        </div>
+  
+</div>
+

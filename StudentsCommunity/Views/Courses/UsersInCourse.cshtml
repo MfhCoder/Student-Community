@@ -1,0 +1,93 @@
+﻿@model IQueryable<StudentsCommunity.ViewModels.UsersInCourseVM>
+@using Microsoft.AspNet.Identity
+@using Microsoft.AspNet.Identity.EntityFramework;
+@using StudentsCommunity.Models;
+
+@{
+    ViewBag.Title = "UsersInCourse";
+}
+
+@{var ID = Url.RequestContext.RouteData.Values["id"]; }
+<h4 class="note">
+Students in the course
+</h4>
+<div class="card card-default" style="width: 80%;">
+    <div class="card-body">
+        <div class="row">
+
+            @if (Model != null)
+            {
+                foreach (var UsersInCourse in Model)
+                {
+                    <div class="items col-xs-12 col-sm-6 col-md-6 col-lg-6 clearfix">
+                        <div class="info-block block-info clearfix">
+                            <div class="square-box pull-left">
+                                <img src="~/Uploads/@UsersInCourse.Users.imageProfile" style="width: 100%;" />
+                            </div>
+                            @if (UsersInCourse.IsActive == true) { 
+                            <a href="#" data-toggle="modal" data-target="#Modal_@UsersInCourse.Users.UserID"  class="btn btn-success pull-right" style="margin-right:2px">
+                                <span class="fa fa-unlock" aria-hidden="true"></span>
+                            </a>
+                                                      
+                                <div class="modal fade" id="Modal_@UsersInCourse.Users.UserID" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">block</h5>
+                                                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">×</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">Are you sure that you want to block this student</div>
+                                            <div class="modal-footer">
+                                                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                                                <a href="@Url.Action("BlockStudent", "Courses", new { StudenId = UsersInCourse.Users.UserID,CourseId=ID, IsActive=false } )" class="btn btn-danger pull-right">
+                                                    <span class="fa fa-lock" aria-hidden="true">block</span>
+                                                </a>    
+                                                                                        </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            }
+                            else
+                            {
+                            <a href="#" data-toggle="modal" data-target="#Modal_@UsersInCourse.Users.UserID"  class="btn btn-danger pull-right" style="margin-right:2px">
+                                <span class="fa fa-lock" aria-hidden="true"></span>
+                            </a>
+
+                                <div class="modal fade" id="Modal_@UsersInCourse.Users.UserID" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel"> unblock</h5>
+                                                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">×</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body"> Are you sure that you want to unblock this student</div>
+                                            <div class="modal-footer">
+                                                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                                                <a href="@Url.Action("BlockStudent", "Courses", new { StudenId = UsersInCourse.Users.UserID,CourseId=ID, IsActive=true } )" class="btn btn-success pull-right">
+                                                    <span class="fa fa-unlock" aria-hidden="true"> UnBlock</span>
+                                                </a>   
+                                        </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            }
+
+                            <h5>Name:<a href="" style="font-weight:bold" class="text-primary">@UsersInCourse.Users.Username</a></h5>
+                            <p>Phone: @UsersInCourse.Users.Phone</p>
+                            <p>Email: @UsersInCourse.Users.Email</p>
+                        </div>
+                    </div>
+
+
+                }
+            }
+
+                    </div>
+                </div>
+            </div>

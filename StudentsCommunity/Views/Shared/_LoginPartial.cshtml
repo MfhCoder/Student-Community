@@ -1,0 +1,211 @@
+﻿@using Microsoft.AspNet.Identity
+@using Microsoft.AspNet.Identity.EntityFramework;
+@using StudentsCommunity.Models;
+
+
+@if (Request.IsAuthenticated)
+{
+    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "ml-auto" }))
+    {
+        @Html.AntiForgeryToken()
+
+        <ul class="nav navbar-nav ml-auto">
+            @if (!User.IsInRole("Admins"))
+            {
+                <li class="nav-item dropdown nav-padding">
+                    <a class="dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        My Courses
+                    </a>
+
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <h6 class="dropdown-header">My Courses</h6>
+                        @{var list = (List<Courses>)Session["Courses"];
+                        }
+                        @foreach (var Course in list)
+                        {
+                            <a class="dropdown-item" href="@Url.Action("Details", "Courses", new { id = Course.Id } )">
+                                @Course.CourseName
+                            </a>
+                        }
+                    </div>
+                </li>
+                            }
+            <li class="nav-item">
+                <a href="@Url.Action("GetAllConversations", "Conversations")" class="notification">
+                    <i class="fa fa-envelope-o fa-lg"></i>
+                    @{var IsRead = (List<Conversation>)Session["IsRead"];
+                        if (IsRead.Any())
+                        {<span class="badge count">1</span>}
+                    }
+                    <div class="noti-content">
+                        <div class="noti-top-arrow"></div>
+                        <ul id="notiContent"></ul>
+                    </div>
+                    @*<span class="badge">4</span>*@
+                </a>
+            </li>
+            @if (User.IsInRole("Students"))
+            {
+                <li class="nav-item">
+                    <a href="@Url.Action("Requests", "TeamRequests")" class="notification noti">
+                        <i class="fa fa-bell-o fa-lg"></i>
+                        @{var RequestsList = (List<TeamRequests>)Session["Requests"];
+                            if (RequestsList.Any())
+                            {<span class="badge count">1</span>}
+                        }
+                        <div class="noti-content">
+                            <div class="noti-top-arrow"></div>
+                            <ul id="notiContent"></ul>
+                        </div>
+                    </a>
+                </li>
+                            }
+                            @*<span class="noti fa fa-bell-o fa-lg"><span class="count">&nbsp;</span></span>
+                                <div class="noti-content">
+                                    <div class="noti-top-arrow"></div>
+                                    <ul id="notiContent"></ul>
+                                </div>*@
+                            <li class="nav-item dropdown nav-padding">
+                                <a class="dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    @User.Identity.GetUserName()
+                                </a>
+                                <ul class="dropdown-menu" style="margin-left:-70px;">
+                                    <li>
+                                        <div class="navbar-login">
+                                            <div class="row align-items-center">
+                                                <div class="col-lg-4">
+                                                    @{
+                                                        var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+
+                                                        var currentUser = manager.FindById(User.Identity.GetUserId());
+
+
+                                                        <img src="~/Uploads/@currentUser.PersonalInformation.UserImage" class="img-thumbnail" />
+
+
+                                                    }
+                                                </div>
+                                                <div class="col-lg-8 ">
+                                                    <p class="text-left"><strong>@User.Identity.GetUserName()</strong></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+
+                                    <li>
+                                        <div class="navbar-login navbar-login-session">
+                                            <div class="row">
+                                                <div class="col-lg-12">
+                                                    @if (User.IsInRole("Admins"))
+
+                                                    {
+                                                        <a class="dropdown-item" href="@Url.Action("Index","Roles")">Manage Roles</a>
+                                                        <a class="dropdown-item" href="@Url.Action("UsersWithRoles","Roles")">Manage Users</a>
+
+                                                    }
+                                                    else
+                                                    if (User.IsInRole("Students"))
+                                                    {  
+                                                    <a href="@Url.Action("Index","PersonalInformations")" class="dropdown-item">My profile</a>
+
+                                                    <a class="dropdown-item" href="@Url.Action("MyCourses","Enrollments")">Manage courses</a>
+
+                                                            <p>
+                                                                <a href="@Url.Action("GetCourse", "Enrollments")" class="btn btn-danger btn-block">Register Course</a>
+                                                            </p>
+
+                                                    }
+                                                    else
+                                                    if (User.IsInRole("Instructors"))
+
+
+                                                    {                                                    
+                                                    <a href="@Url.Action("Index","PersonalInformations")" class="dropdown-item">My profile</a>
+
+                                                        <a class="dropdown-item" href="@Url.Action("MyCourses","Courses")">Manage courses</a>
+
+                                                            <p>
+                                                                <a href="@Url.Action("AddCourse", "Courses")" class="btn btn-danger btn-block">Add Course</a>
+                                                            </p>
+                                                    }
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            <li class="nav-item nav-padding">
+                                <a data-toggle="modal" style="cursor: pointer;" data-target="#exampleModal">
+                                    <i class="fa fa-fw fa-sign-out"></i>Logout
+                                </a>
+                            </li>
+                        </ul>
+
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+
+                                                            <ul class="nav navbar-nav">
+                                                                <li class="nav-item nav-padding">
+                                                                    <a href="~/Home/Index">
+                                                                        Home
+                                                                    </a>
+                                                                </li>
+
+                                                                <li class="nav-item nav-padding">
+                                                                    <a href="~/Home/Contact">
+                                                                        Contact US
+                                                                    </a>
+                                                                </li>
+
+                                                                <li class="nav-item nav-padding">
+                                                                    <a href="~/Home/About">
+                                                                        About
+                                                                    </a>
+                                                                </li>
+
+                                                            </ul>
+
+                                                            <ul class="nav navbar-nav ml-auto">
+                                                                <li class="nav-item nav-padding">
+                                                                    <a href="~/Account/Login">
+                                                                        <i class="fa fa-user"></i>
+                                                                        Login
+                                                                    </a>
+                                                                </li>
+
+                                                                <li class="nav-item nav-padding">
+                                                                    <a href="~/Account/Register">
+                                                                        <i class="fa fa-lock"></i>
+                                                                        Register
+                                                                    </a>
+                                                                </li>
+                                                            </ul>
+
+
+                                                        }
+<!-- Logout Modal-->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a href="javascript:document.getElementById('logoutForm').submit()" class="btn btn-primary">Logout</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+

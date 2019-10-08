@@ -1,0 +1,78 @@
+﻿@{
+    ViewBag.Title = "Upload File";
+}
+
+<h4 class="note">
+    Upload Files
+</h4>
+<div class="alert alert-danger" id="error-div" style="display:none">
+    <span id="view-err">
+    </span>
+</div>
+<div class="text-center">
+    <input type='file' id="files" multiple="multiple" />
+    <input type="button" id="upload" value="Upload" class="btn btn-primary" />
+</div>
+@section Scripts
+{
+<script>
+    //$body = $("body");
+    //$(document).on({
+    //    ajaxStart: function () { $body.addClass("loading"); },
+    //    ajaxStop: function () { $body.removeClass("loading"); }
+    //});
+
+    
+
+    $(document).ready(function () {
+        $("#upload").click(function () {
+
+            if ($("#files").val() != "") {
+                //Check if the Image extension is valid
+                var filename = document.getElementById("files").value;
+                var extensionImg = filename.substr(filename.lastIndexOf('.') + 1);
+                var validExtensions = ['xlsx', 'docx', 'pdf','jpg', 'png', 'pptx'];
+                if ($.inArray(extensionImg, validExtensions) == -1) {
+                    $("#error-div").fadeIn();
+                    $("#view-err").append("please select right extention");
+                    return false;
+                }
+
+                //Check if the Image Size is valid (2 mb)
+                var myFileSize = document.getElementById("files").files[0].size / 1024 / 1024;
+
+                if (myFileSize > 2) {
+                    $("#error-div").fadeIn();
+                    $("#view-err").append("size is larger than 2Mb");
+                    return false;
+                }
+            }
+
+            var data = new FormData();
+            //Add the Multiple selected files into the data object
+            var files = $("#files").get(0).files;
+            for (i = 0; i < files.length; i++) {
+                data.append("files" + i, files[i]);
+            }
+            var Id = @ViewBag.CourseId;
+            data.append("Id", Id);
+            //Post the data (files) to the server
+            if (files.length > 0) {
+                $.ajax({
+                    type: 'POST',
+                    url: "@Url.Action("Upload")",
+                    data:data,        
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        alert("Successfully Uploaded!");
+                    },
+                    error: function () {
+                        alert("An error occurred!");
+                    },
+                });
+            }
+        });
+    });
+</script>
+    }

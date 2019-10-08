@@ -1,0 +1,40 @@
+﻿@model IEnumerable<StudentsCommunity.Models.TeamRequests>
+    <div class="card card-primary" >
+        <div class="card-header text-center">My Requests</div>
+        <div class="card-body">
+
+            <div class="row">
+
+                @if (Model != null)
+            {
+                foreach (var Request in Model)
+                {
+                        <div class="col-md-10 offset-md-1">
+                                <div class="notice notice-lg notice-info">
+                                            <strong><span class="fa fa-envelope"></span> Request to join a team</strong>
+                                    <div class="row">
+
+                                        <div class="col-md-4">
+                                            <span class="fa fa-clock-o" aria-hidden="true"></span>
+                                            <time class="timeago" datetime="@Request.Date">@Request.Date</time>
+                                        </div>
+                                        <div class="col-md-4 offset-md-4">
+
+                                            <a href="@Url.Action("AcceptRequest", "TeamRequests", new { id = Request.Id } )"class="btn btn-primary">
+                                                Accept
+                                            </a>
+                                            <a href="@Url.Action("RefuseRequest", "TeamRequests", new { id = Request.Id } )"class="btn btn-danger">
+                                                Refuse
+                                            </a>
+                                        </div>
+                                    </div>
+                            </div>
+                            </div>
+
+
+                    }
+                }
+
+            </div>
+        </div>
+    </div>

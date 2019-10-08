@@ -1,0 +1,89 @@
+﻿@model IQueryable<StudentsCommunity.ViewModels.PostsVM>
+@using Microsoft.AspNet.Identity
+@using Microsoft.AspNet.Identity.EntityFramework;
+@using StudentsCommunity.Models;
+
+@{
+    ViewBag.Title = "GetPosts";
+}
+@{    var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+
+    var currentUser = manager.FindById(User.Identity.GetUserId());
+}
+
+@{var ID = Url.RequestContext.RouteData.Values["id"]; }
+
+<a href="@Url.Action("AddPost", "Comments", new { id = ID } )" class='b1'>
+    New Post
+</a>
+@if (Model != null)
+{
+    foreach (var post in Model)
+    {<div class="row">
+         <div class="col-lg-9 col-md-11 col-sm-12">
+             <div class="card card-default" ;margin-bottom:20px">
+                 <div class="card-body">
+                     <div class="avatar">
+                         <img src="~/Uploads/@post.Users.imageProfile" class="rounded-circle" style="width: 60px;" />
+                         <span>
+                             <a href="" style="font-weight:bold" class="text-primary">@post.Users.Username</a>
+                             @if (manager.GetRoles(post.Users.UserID).Contains("Instructors"))
+                             {
+                                 <span class="badge badge-info"> Instructor</span><br />
+
+                             }
+                         </span>
+                         @if (post.IsSolved == false)
+                    {
+                             <a href="#" class="btn btn-danger pull-right">
+                                 <span class="fa fa-question-circle fa-lg" aria-hidden="true"></span>
+                             </a>
+
+                         }
+                         else
+                         {
+                             <a href="#" class="btn btn-success pull-right">
+                                 <span class="fa fa-check fa-lg" aria-hidden="true"></span>
+                             </a>
+
+                         }
+
+                         <br />
+                         <p style="margin-left: 60px; margin-top: -19px;">
+                             <span class="fa fa-clock-o" aria-hidden="true"></span>
+                             <time class="timeago" datetime="@post.PostedDate">@post.PostedDate</time>
+                         </p>
+
+                     </div>
+                     <div class="postMessage" style="margin-top: 11px; margin-left: 9px;">
+
+                         <p class="message">
+                             @Html.Raw(HttpUtility.HtmlDecode(post.Message))
+                         </p>
+                     </div>
+
+                 </div>
+                 <div class="card-footer">
+                     <a href="@Url.Action("GetPosts", "Comments", new { id = post.PostID } )" class="btn btn-warning Comment">
+                         <span class="fa fa-comments-o" aria-hidden="true"></span> Comment
+                     </a>
+                     <div class="comment">
+                         <div class="thank" style="cursor:auto">
+                             <a>
+                                 <h5 style="display: inline-block;"><i class="fa fa-thumbs-up"></i></h5><span id="number">@post.Likes</span>
+                             </a>
+                         </div>
+                     </div>
+                 </div>
+
+
+             </div>
+
+             </div>
+         </div>
+
+    }
+}
+
+
+

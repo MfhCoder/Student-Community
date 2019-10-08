@@ -1,0 +1,49 @@
+﻿@{var ID = Url.RequestContext.RouteData.Values["id"]; }
+
+    @{
+        var Id = ViewBag.CourseId;
+
+        ViewBag.Title = "Download Files";
+    }
+
+        <h4 class="note">
+            Download Files
+        </h4>
+        <div>
+            <div style="margin: 20px;">
+                @{            var Files = (ViewBag.Files as string[]);
+                    if (Files != null && Files.Any())
+                    {
+                        foreach (var file in Files)
+                        {
+                            <br />
+                            <a class="btn btn-success btn-sm">
+                                <span class="fa fa-download"></span> @Html.ActionLink(file, "DownloadFile", new { fileName = file, Id = Id })
+                            </a>
+                            <br />
+
+                        }
+
+                    }
+                    else
+                    {
+                        <label>No File(s) to Download</label>
+                    }
+                }
+
+            </div>
+            <div>
+
+                @if (User.IsInRole("Instructors"))
+
+                {
+                    <a href="@Url.Action("Upload", "Courses", new { id = ID })" class='btn btn-primary btn-xs'>
+                        Upload Resources
+                    </a>
+                }
+
+            </div>
+
+
+
+        </div>

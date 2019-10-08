@@ -1,0 +1,43 @@
+﻿@model IEnumerable<StudentsCommunity.Models.Enrollment>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="text-center">My Courses</h2>
+
+<p>
+    <a href="@Url.Action("GetCourse", "Enrollments")" class='b1'>
+       Register New Course
+    </a>
+</p>
+<table class="table table-striped table-bordered table-inverse" style="width:100%">
+    <thead class="note">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Courses.CourseName)
+            </th>
+            <th>Manage</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model)
+        {
+            <tr class="text-center">
+                <td>
+                    @Html.DisplayFor(modelItem => item.Courses.CourseName)
+                </td>
+                <td class="text-center">
+                    <a href="@Url.Action("Delete", "Enrollments", new { id = item.CoursesId } )" class='btn btn-danger btn-xs'>
+                        <i class="fa fa-trash"></i>
+                    </a>
+                    @*<a href="@Url.Action("Details", "Enrollments", new { id = item.CoursesId } )" class='btn btn-info btn-xs'>
+                        <i class="fa fa-info"></i>
+                    </a>*@
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

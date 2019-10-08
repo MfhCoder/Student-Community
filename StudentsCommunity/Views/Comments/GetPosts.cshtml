@@ -1,0 +1,237 @@
+﻿@model IQueryable<StudentsCommunity.ViewModels.PostsVM>
+@using Microsoft.AspNet.Identity
+@using Microsoft.AspNet.Identity.EntityFramework;
+@using StudentsCommunity.Models;
+
+@{
+    ViewBag.Title = "GetPosts";
+}
+@{    var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+
+    var currentUser = manager.FindById(User.Identity.GetUserId());
+}
+
+@if (Model != null)
+{
+    foreach (var post in Model)
+    {<div class="row">
+        <div class="col-lg-9 col-md-11 col-sm-12">
+            <div class="card card-default">
+                <div class="card-body">
+                    <div class="avatar">
+                        <img src="~/Uploads/@post.Users.imageProfile" class="rounded-circle" style="width: 60px;" />
+                        <span>
+                            <a href="" style="font-weight:bold" class="text-primary">@post.Users.Username</a>
+
+                            @if (manager.GetRoles(post.Users.UserID).Contains("Instructors"))
+                            {
+                                <span class="badge badge-info"> Instructor</span><br />
+
+                            }
+                        </span>
+
+                        @{if (post.Users.UserID == currentUser.Id)
+                            {
+                                if (post.IsSolved == false)
+                                {
+                                    <a href="@Url.Action("IsSolved", "Comments", new { PostId = post.PostID, IsSolved=true } )" class="btn btn-danger pull-right">
+                                        <span class="fa fa-question-circle fa-lg" aria-hidden="true"></span>
+                                    </a>
+
+                                }
+                                else
+                                {
+                                    <a href="@Url.Action("IsSolved", "Comments", new { PostId = post.PostID, IsSolved=false } )" class="btn btn-success pull-right">
+                                        <span class="fa fa-check fa-lg" aria-hidden="true"></span>
+                                    </a>
+
+                                }
+                            }
+
+                        }
+
+                        <br />
+                        <p style="margin-left: 60px; margin-top: -19px;">
+                            <span class="fa fa-clock-o" aria-hidden="true"></span>
+                            <time class="timeago" datetime="@post.PostedDate">@post.PostedDate</time>
+                        </p>
+
+                    </div>
+                    <div class="postMessage" style="margin-top: 11px; margin-left: 9px;">
+
+                        <p class="message">
+                            @Html.Raw(HttpUtility.HtmlDecode(post.Message))
+                        </p>
+                    </div>
+
+                </div>
+                <div class="card-footer">
+                    <button type="button" class="btn btn-warning Comment" data-id="@post.PostID" value="Comment">
+                        <span class="fa fa-comments-o" aria-hidden="true"></span> Comment
+                    </button>
+                    <div class="comment" id="Like" data-id="@post.PostID">
+                        <div class="thank">
+                            <a>
+                                <h5 style="display: inline-block;"><i class="fa fa-thumbs-up"></i></h5><span id="number">@post.Likes</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div id="reply">
+                <div class="comments-container">
+                    <ul id="@string.Format("{0}_{1}","commentsBlock", post.PostID)" class="comments-list"></ul>
+                    <div class="comment-container">
+                        <div class="meta">
+                            <img src="/Uploads/@currentUser.PersonalInformation.UserImage" alt="" class="avatar">
+                            <span class="name">@currentUser.UserName</span>
+                            <span class="placeholder">write a response</span>
+                        </div>
+                        <div class="AddComment">
+                            <textarea id="@string.Format("{0}_{1}", "comment", post.PostID)" class="form-control" style="display: inline;" placeholder="write a response"> </textarea>
+                            <button type="button" class="btn btn-outline-success btn-sm addComment" data-id="@post.PostID"><span class="fa fa-send"></span> Summit Comment</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+                                }
+                            }
+
+@section Scripts
+{
+
+    <script type="text/javascript">
+
+                    //$(document).ready(function () {
+
+                    $(function () {
+                        // Create a proxy to signalr hub on web server. It reference the hub.
+                        var notificationFromHub = $.connection.CommentsHub;
+
+                        // Connect to signalr hub
+                        $.connection.hub.start().done(function () {
+                            console.log("done.");
+                            GetComments();
+                        });
+
+                        // Notify to client with the recent updates
+                        notificationFromHub.client.updatedClients = function () {
+                            console.log("updated.");
+                            GetComments();
+                        };
+                    });
+
+                    function GetComments() {
+                        var ID = @ViewBag.ID;
+
+                        var allCommentsArea = $('<div>').addClass('allComments_' + ID);
+
+                        //function that allow us to get all comments related to post id
+                        $.ajax({
+
+                            type: 'GET',
+                            url: '@Url.Action("GetComments", "Comments")',
+                            data: { postId: ID },
+                            success: function (response) {
+
+                                if ($('div').hasClass('allComments_' + ID + '')) {
+                                    $('div[class=allComments_' + ID + ']').remove();
+                                }
+                                //console.log(response);
+
+
+                                allCommentsArea.html(response);
+                                allCommentsArea.prependTo('#commentsBlock_' + ID);
+
+
+                            },
+                            error: function (response) {
+                                alert('Sorry: Comments cannot be loaded !');
+                            }
+
+
+                            //})
+
+
+                        });}
+
+                    //Add New Comment
+                    $('.addComment').on('click', function () {
+
+                        var postId = $(this).attr('data-id');
+                        var commentMsg = $('#comment_' + postId).val();
+                        var dateTimeNow = new Date();
+
+                        //alert('Hello');
+                        var comment = {
+                            CommentMsg: commentMsg,
+                            CommentedDate: dateTimeNow.toLocaleString()
+                        };
+
+                        $.ajax({
+
+                            type: 'POST',
+                            url: '@Url.Action("AddComment", "Comments")',
+                            data: { comment, postId },
+                            success: function (response) {
+
+                                $('div[class=allComments_' + postId + ']').remove();
+
+                                var allCommentsArea = $('<div>').addClass('allComments_' + postId);
+                                allCommentsArea.html(response);
+
+                                allCommentsArea.prependTo('#commentsBlock_' + postId);
+                                $('.form-control').val('');
+                            },
+                            error: function (response) {
+                                alert('Sorry: Something Wrong');
+                            }
+
+                        });
+
+                    });
+
+                    //Like
+                    var comment = document.querySelector('.comment');
+                    var thank = document.querySelector('.thank');
+                    var heading = thank.querySelector('h5');
+
+                    $('#Like').on('click', function () {
+                        var PostID = $(this).attr('data-id');
+
+                        $.ajax({
+
+                            type: 'POST',
+                            url: '@Url.Action("Likes", "Comments")',
+                            data: { PostID },
+                            success: function (response) {
+                                var value = parseInt(document.getElementById('number').innerHTML, 10);
+                                value = isNaN(value) ? 0 : value;
+                                value++;
+                                document.getElementById('number').innerHTML = value;
+                                comment.classList.toggle('liked');
+                                if (comment.className == "comment liked") {
+                                    heading.innerHTML = "Good Question 👍";
+                                    $('#Like').removeAttr('id');
+                                } else {
+                                    heading.innerHTML = "👍";
+                                }
+                            }
+                        });
+                        return false;
+
+                    });
+
+                    //jQuery("time.timeago").timeago();
+
+                    //});
+
+    </script>
+
+
+}
+

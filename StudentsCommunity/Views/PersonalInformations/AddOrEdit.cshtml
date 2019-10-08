@@ -1,0 +1,149 @@
+﻿@model StudentsCommunity.Models.PersonalInformation
+
+@{
+    ViewBag.Title = "Edit Profile";
+}
+
+@using (Html.BeginForm("AddOrEdit", "PersonalInformations", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="alert alert-danger" id="error-div" style="display:none">
+        <span id="view-err">
+        </span>
+    </div>
+<div class="row">
+
+    <div class="col-sm-3">
+        <!--left col-->
+
+
+        <div class="text-center">
+
+                <img src="~/Uploads/@Html.DisplayFor(model=> model.UserImage)"
+                     class="rounded-circle thumbnail" />
+                <h6>Upload a different photo...</h6>
+            <!-- File Button -->
+            <div class="input-group">
+                <input type="file" name="upload" id="myImage" style="display:none">
+                <input type="text" id="fake-file-input-name" disabled="disabled" placeholder="Select photo" class="form-control">
+                <span class="input-group-btn">
+                    <button id="fake-file-button-browse" type="button" class="btn btn-default">
+                        <span class="fa fa-photo"></span>
+                    </button>
+                </span>
+            </div>
+
+                @Html.ValidationMessageFor(model => model.UserImage, "", new { @class = "text-danger" })
+            </div>
+
+
+    </div><!--/col-3-->
+    <div class="col-sm-9">
+
+        <div class="card">
+            <div class="card-header">Edit profile</div>
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            @Html.HiddenFor(model => model.UserId)
+            @Html.HiddenFor(model => model.UserImage)
+            <div class="card-body" id="home">
+                <hr>
+                    <div class="form-group">
+
+                        <div class="col-xs-6">
+                            <label for="first_name"><h4>FullName</h4></label>
+                            @Html.EditorFor(model => model.FullName, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.FullName, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group">
+
+                        <div class="col-xs-6">
+                            <label for="last_name"><h4>StudentId</h4></label>
+                            @Html.EditorFor(model => model.StudentId, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.StudentId, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                <div class="form-group">
+
+                    <div class="col-xs-6">
+                        <label for="last_name"><h4>Skills</h4></label>
+                        @Html.EditorFor(model => model.Skills, new { htmlAttributes = new { @class = "form-control", id = "skill" } })
+                        @Html.ValidationMessageFor(model => model.Skills, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <br>
+                            <input type="submit" value="Save" class="btn btn-lg btn-success" id="save" />
+
+                          </div>
+                    </div>
+
+                <hr>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+}
+
+@section scripts{
+    <script>
+        //Autocomplete with tokenfield
+        $('#skill').tokenfield({
+            autocomplete: {
+                source: ['PHP', 'HTML', 'JQuery', 'Javascript', 'CSS', 'Laravel', 'CakePHP', 'Asp.net', 'C#', 'Sql', 'FuelPHP', 'PHPixie', 'Mysql'],
+                delay: 100
+            },
+            showAutocompleteOnFocus: true
+        });
+        $(function () {
+
+                $("#save").click(function () {
+
+                      //Check if the input is Empty
+                    //if ($("#myImage").val() == "") {
+                    //      $("#error-div").fadeIn();
+                    //      $("#view-err").append("please select right extention");
+                    //      return false;
+                    //  }
+
+                    if ($("#myImage").val() != "") {
+                        //Check if the Image extension is valid
+                        var filename = document.getElementById("myImage").value;
+                        var extensionImg = filename.substr(filename.lastIndexOf('.') + 1);
+                        var validExtensions = ['jpg', 'png', 'gif', 'bmp'];
+                        if ($.inArray(extensionImg, validExtensions) == -1) {
+                            $("#error-div").fadeIn();
+                            $("#view-err").append("please select right extention");
+                            return false;
+                        }
+
+                        //Check if the Image Size is valid (2 mb)
+                        var myFileSize = document.getElementById("myImage").files[0].size / 1024 / 1024;
+
+                        if (myFileSize > 2) {
+                            $("#error-div").fadeIn();
+                            $("#view-err").append("size is larger than 2Mb");
+                            return false;
+                        }
+                    }
+                });
+            //File Button
+                document.getElementById('fake-file-button-browse').addEventListener('click', function () {
+                    document.getElementById('myImage').click();
+                });
+
+                document.getElementById('myImage').addEventListener('change', function () {
+                    document.getElementById('fake-file-input-name').value = this.value;
+
+                    document.getElementById('fake-file-button-upload').removeAttribute('disabled');
+                });
+        });
+    </script>
+}

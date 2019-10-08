@@ -1,0 +1,128 @@
+﻿@model IQueryable<StudentsCommunity.viewModels.QuestionVM>
+
+@{
+    int count = 1, countR = 0;
+}
+
+
+@if (Model != null && Model.Any())
+{
+
+    foreach (var question in Model)
+    {
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>
+                        <span class="badge badge-warning">@string.Format("{0}{1}.", "Q", count)</span>
+                        <span id="@string.Format("{0}{1}", "ID_Q", count)" style="display:none;">@question.QuestionId</span>
+                        <p style="display: inline;" id="@string.Format("{0}{1}", "Q", count)">@question.QuestionText</p>
+                    </h3>
+                </div>
+
+                <div class="quiz" id="quiz" data-toggle="buttons">
+
+                    @foreach (var choice in question.Choices)
+                    {
+                <label class="element-animation1 btn btn-lg btn-primary btn-block">
+                    <span class="btn-label justify-content-center"><i class="fa fa-angle-right"></i></span>
+                    <input type="radio" name="@string.Format("{0}{1}", "inlineRadioOptions",count)" id="@string.Format("{0}{1}", "inlineRadio", countR)" value="@choice.ChoiceText" style="margin-left: -16px;"> @choice.ChoiceText
+                </label><br />
+                        countR++;
+                    }
+
+                </div> <!--END Choices-->
+
+                <div class="modal-footer text-muted">
+                    <div id="@string.Format("{0}{1}{2}", "Ans","Q", count)">
+
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+                <!-- END BlockQ -->
+        count++;
+    }
+
+                <div class="text-center">
+                    <span id="countQuections" style="display:none;">@count</span>
+                    <button type="button" id="SubmitQuiz" class="btn btn-primary" style="margin-top: 10px;"><span class="glyphicon glyphicon-ok"></span>   Submit Quiz </button>
+
+                </div>
+}
+
+
+
+@section Scripts
+{
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $('#SubmitQuiz').on('click', function () {
+
+                //count Questions
+                var sel = $('#countQuections').text();
+
+                console.log(sel);
+
+                var resultQuiz = [], countQuestion = parseInt(sel), question = {}, j = 1;
+
+                for (var i = 1; i < countQuestion; i++) {
+                    question = {
+                        QuestionID: $('#ID_Q' + i).text(),
+                        QuestionText: $('#Q' + i).text(),
+                        AnswerQ: $('input[name=inlineRadioOptions' + i + ']:checked').val()
+                    }
+
+                    resultQuiz.push(question);
+                }
+
+                $.ajax({
+
+                    type: 'POST',
+                    url: '@Url.Action("QuizTest", "Quizz")',
+                    data: { resultQuiz },
+
+                    success: function (response) {
+
+                        if (response.result.length > 0) {
+                            for (var i = 0; i < response.result.length; i++) {
+                                if (response.result[i].isCorrect == true) {
+
+                                    $('#AnsQ' + j).html('<div class="alert alert-success" role="alert"><span class="fa fa-thumbs-up" aria-hidden="true"></span> Correct answer</div>');
+                                }
+                                else {
+                                    $('#AnsQ' + j).html('<div class="alert alert-danger" role="alert"> <span class="fa fa-thumbs-down" aria-hidden="true"></span> Incorrect answer - The Good Answer is <b>' + response.result[i].AnswerQ + '</b></div>');
+                                }
+                                j++;
+                            }
+                        }
+                        else {
+                            alert("Something Wrong");
+                        }
+
+
+                        //console.log(response.result.length);
+
+                    },
+                    error: function (response) {
+
+                    }
+                });
+
+                console.log(resultQuiz);
+
+            });
+
+
+
+        });
+
+    </script>
+}
+
+
+

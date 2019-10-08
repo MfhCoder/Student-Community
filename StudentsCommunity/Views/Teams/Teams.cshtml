@@ -1,0 +1,35 @@
+﻿@model IEnumerable<StudentsCommunity.Models.Team>
+
+@{
+    ViewBag.Title = "Teams";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="note">Teams</h2>
+
+    @*<a href="@Url.Action("Create", "Teams")" class="b1" style="margin:40%">
+        Create New Team
+    </a>*@
+<div class="row">
+    @foreach (var item in Model)
+    {
+        <div class="col-md-4">
+            <div class="card text-white bg-info mb-3">
+                <div class="card-header">
+                    @Html.DisplayFor(modelItem => item.Name)
+                    <a href="@Url.Action("UsersInTeams", "Teams", new { id = item.Id })" class="btn btn-primary pull-right">
+                        <span class="badge badge-light">@item.StudentsInTeams.Count()</span> Members
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        @*<div class="col-md-offset-3 col-md-2">
+            <a href="@Url.Action("UsersInTeams", "Teams", new { id = item.Id })">
+                <div class="note" style="padding-top:25px">
+                    <h4><i class="fa fa-users"></i> @Html.DisplayFor(modelItem => item.Name)</h4>
+                </div>
+            </a>
+        </div>*@
+    }
+</div>

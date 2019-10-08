@@ -1,0 +1,75 @@
+﻿@model IEnumerable<StudentsCommunity.Models.StudentsInTeams>
+@using Microsoft.AspNet.Identity
+@using Microsoft.AspNet.Identity.EntityFramework;
+
+@{
+    ViewBag.Title = "MYTeams";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{var ID = Url.RequestContext.RouteData.Values["id"]; }
+
+<h2 class="note">My Teams</h2>
+@if (!Model.Any())
+{
+    <a href="@Url.Action("Create", "Teams", new { id = ID } )" class="b1" style="margin:40%">
+        Create New Team
+    </a>
+}
+else
+{ <div class="raw">
+    @foreach (var item in Model)
+    {
+
+        <div class="col-md-12">
+            <a href="@Url.Action("UsersInTeams", "Teams", new { id = item.Team.Id })">
+                <div class="note" style="padding-top:25px">
+                    <h4>
+                        <i class="fa fa-users"></i> @Html.DisplayFor(modelItem => item.Team.Name) @*<span class="badge badge-light"></span>*@
+                        @*<a href="@Url.Action("UsersInTeams", "Teams", new { id = item.Team.Id } )" class="btn btn-primary pull-right" style="margin-left:5px;">
+                                <span class="fa fa-info" aria-hidden="true"></span>
+                            </a>*@
+                        @if (User.Identity.GetUserId() == item.Team.StudentId)
+                        {                         <a href="@Url.Action("Edit", "Teams", new { id = item.Team.Id } )" class="btn btn-primary pull-right" style="margin-left:5px;">
+                            <span class="fa fa-edit" aria-hidden="true"></span>
+                        </a>
+                        <a href="@Url.Action("Delete", "Teams", new { id = item.Team.Id } )" class="btn btn-primary pull-right" style="margin-left:5px;">
+                            <span class="fa fa-trash" aria-hidden="true"></span>
+                        </a>
+                        <a href="@Url.Action("AddToTeam", "Teams", new { id = item.Team.Id } )" class="btn btn-primary pull-right" style="margin-left:5px;">
+                            <span class="fa fa-plus" aria-hidden="true"></span>
+                        </a>
+                        }
+                        else
+                        {
+                            <a href="#" data-toggle="modal" data-target="#Modal_Leave" class="btn btn-success pull-right" style="margin-right:2px">
+                              Leave the team
+                            </a>
+                            <div class="modal fade" id="Modal_Leave" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">block</h5>
+                                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">×</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body text-primary">Are you sure that you want to leave this team</div>
+                                        <div class="modal-footer">
+                                            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                                            <a href="@Url.Action("LeaveTeam", "Teams", new { id = item.TeamId} )" class="btn btn-danger pull-right">
+                                           Leave
+                                             </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                    </h4>
+                </div>
+            </a>
+        </div>
+
+    }
+</div>
+}

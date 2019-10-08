@@ -1,0 +1,182 @@
+﻿@model IQueryable<StudentsCommunity.ViewModels.ConversationsVM>
+@using Microsoft.AspNet.Identity
+@using Microsoft.AspNet.Identity.EntityFramework;
+@using StudentsCommunity.Models;
+
+@{
+    ViewBag.Title = "GetConversations";
+}
+
+@{    var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+    var UserId = User.Identity.GetUserId();
+}
+
+@if (Model != null)
+{
+    foreach (var Conversation in Model)
+    {    <div class="chat">
+        <div class="chat-header clearfix">
+            @if (Conversation.FromId == UserId)
+            {
+                var To = manager.FindById(Conversation.ToId);
+                <img src="~/Uploads/@To.PersonalInformation.UserImage" alt="avatar" class="rounded-circle img-thumbnail bg-success " style="width: 60px; padding:3px" />
+
+            }
+            else
+            {
+                <img src="~/Uploads/@Conversation.Users.imageProfile" alt="avatar" class="rounded-circle img-thumbnail bg-success " style="width: 60px; padding:3px" />
+            }
+
+            <div class="chat-about">
+                <div class="chat-with">Chat with @Conversation.Users.Username [@Conversation.Title]</div>
+                <div class="chat-num-messages">
+                    <span class="fa fa-clock-o" aria-hidden="true"></span>
+                    <time class="timeago" datetime="@Conversation.Date">@Conversation.Date</time>
+                </div>
+            </div>
+            <a href="@Url.Action("MyTeams", "Teams")" class="btn btn-primary pull-right" style="margin-left:5px;">
+                <span class="fa fa-plus" aria-hidden="true"></span>
+            </a>
+        </div>
+        <div class="chat-history">
+            <ul id="@string.Format("{0}_{1}","commentsBlock", Conversation.ID)" style="list-style-type: none;"></ul>
+        </div>
+
+        <!-- end chat-history -->
+             <form>
+                 <div class="chat-message clearfix">
+                     <textarea name="message-to-send" id="@string.Format("{0}_{1}", "comment", Conversation.ID)" placeholder="Type your message" rows="3" required="required"></textarea>
+
+                     <button type="button" class="addComment" data-id="@Conversation.ID">Send</button>
+
+                 </div> <!-- end chat-message -->
+             </form>
+
+</div> <!-- end chat -->
+
+
+            @*<div id="reply">
+                <div class="comments-container">
+                    <ul id="@string.Format("{0}_{1}","commentsBlock", Conversation.ID)" class="comments-list"></ul>
+                    <div class="comment-container">
+
+                        <div class="AddComment">
+                            <textarea id="@string.Format("{0}_{1}", "comment", Conversation.ID)" class="form-control" style="display: inline;" placeholder="write a response"> </textarea>
+                            <button type="button" class="btn btn-outline-success btn-sm addComment" data-id="@Conversation.ID"><span class="fa fa-send"></span> Summit Comment</button>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>*@
+
+            }
+            }
+
+            @section Scripts
+{
+
+                <script type="text/javascript">
+
+                    //$(document).ready(function () {
+
+                    $(function () {
+                        // Create a proxy to signalr hub on web server. It reference the hub.
+                        var notificationFromHub = $.connection.MessagesHub;
+
+                        // Connect to signalr hub
+                        $.connection.hub.start().done(function () {
+                            console.log("done.");
+                            GetComments();
+                        });
+
+                        // Notify to client with the recent updates
+                        notificationFromHub.client.updatedClients = function () {
+                            console.log("updated.");
+                            GetComments();
+                        };
+                    });
+
+                    function GetComments() {
+                        var ID = @ViewBag.ID;
+
+                        var allCommentsArea = $('<div>').addClass('allComments_' + ID);
+
+                        //function that allow us to get all comments related to Conversation id
+                        $.ajax({
+
+                            type: 'GET',
+                            url: '@Url.Action("GetMessages", "Conversations")',
+                            data: { ConversationId: ID },
+                            success: function (response) {
+
+                                if ($('div').hasClass('allComments_' + ID + '')) {
+                                    $('div[class=allComments_' + ID + ']').remove();
+                                }
+                                //console.log(response);
+
+
+                                allCommentsArea.html(response);
+                                allCommentsArea.prependTo('#commentsBlock_' + ID);
+
+
+                            },
+                            error: function (response) {
+                                alert('Sorry: Comments cannot be loaded !');
+                            }
+
+
+                            //})
+
+
+                        });}
+
+                    //Add New Comment
+                    $('.addComment').on('click', function () {
+
+                        var ConversationId = $(this).attr('data-id');
+                        var Message = $('#comment_' + ConversationId).val();
+                        var dateTimeNow = new Date();
+
+                        //alert('Hello');
+                        var Message = {
+                            Msg: Message,
+                            Date: dateTimeNow.toLocaleString()
+                        };
+
+                        $.ajax({
+
+                            type: 'POST',
+                            url: '@Url.Action("AddMessage", "Conversations")',
+                            data: { Message, ConversationId },
+                            success: function (response) {
+
+                                $('div[class=allComments_' + ConversationId + ']').remove();
+
+                                var allCommentsArea = $('<div>').addClass('allComments_' + ConversationId);
+                                allCommentsArea.html(response);
+
+                                allCommentsArea.prependTo('#commentsBlock_' + ConversationId);
+                                //$('.form-control').val('');
+
+                                //clear fields
+                                $('textarea').val('');
+
+                            },
+                            error: function (response) {
+                                alert('Sorry: Something Wrong');
+                            }
+
+                        });
+
+                    });
+
+                    //jQuery("time.timeago").timeago();
+
+                    //});
+
+                </script>
+
+
+            }
+

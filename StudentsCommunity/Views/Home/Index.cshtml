@@ -1,0 +1,64 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+@*@if (Request.IsAuthenticated)
+{
+
+
+        <div class="card bg-white">
+            <div classl="card-body" style="width: 50%;margin-left: 25%; padding:20px">
+                <div class="notice notice-lg notice-success">
+                   <strong><span class="fa fa-comments"></span> posts</strong><button type="button" class="btn btn-success btn-sm">New posts <span class="badge badge-light">0</span></button>
+                </div>
+                <div class="notice notice-lg notice-danger">
+                    <strong><span class="fa fa-bell"></span> Notification</strong> <button type="button" class="btn btn-danger btn-sm">New Notification <span class="badge badge-light">0</span></button>
+                </div>
+                <div class="notice notice-lg notice-info">
+                    <strong><span class="fa fa-envelope"></span> Messages</strong> <button type="button" class="btn btn-info btn-sm">New Messages <span class="badge badge-light">0</span></button>
+                </div>
+                
+            </div>
+        </div>
+
+    
+}
+else
+{*@
+    <div id="demo" class="carousel slide" data-ride="carousel">
+        <ul class="carousel-indicators">
+            <li data-target="#demo" data-slide-to="0" class="active"></li>
+            <li data-target="#demo" data-slide-to="1"></li>
+            <li data-target="#demo" data-slide-to="2"></li>
+        </ul>
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="~/img/PB.jpg" alt="Los Angeles" width="1100" height="500">
+                <div class="carousel-caption">
+                    <h3> facilitates interaction</h3>
+                    <p>students who were stuck on problems get unstuck with the help of their classmates</p>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="~/img/PB.jpg" alt="Chicago" width="1100" height="500">
+                <div class="carousel-caption">
+                    <h3>feedback</h3>
+                    <p>Instructors can view detailed class participation information </p>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="~/img/PB.jpg" alt="New York" width="1100" height="500">
+                <div class="carousel-caption">
+                    <h3>Team Management</h3>
+                    <p>Students can join with team in a specific course</p>
+                </div>
+            </div>
+        </div>
+        <a class="carousel-control-prev" href="#demo" data-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+        </a>
+        <a class="carousel-control-next" href="#demo" data-slide="next">
+            <span class="carousel-control-next-icon"></span>
+        </a>
+    </div>
+@*}*@

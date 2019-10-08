@@ -1,0 +1,39 @@
+﻿@model IQueryable<StudentsCommunity.ViewModels.ConversationsVM>
+@using Microsoft.AspNet.Identity
+@using Microsoft.AspNet.Identity.EntityFramework;
+@using StudentsCommunity.Models;
+
+@{
+    ViewBag.Title = "Get Conversations";
+}
+
+
+@{var ID = Url.RequestContext.RouteData.Values["id"]; }
+<div class="card card-primary" style="width: 80%;">
+  <div class="card-header text-center">My Conversations</div>
+        <div class="card-body">
+
+            <div class="row">
+
+                @if (Model != null)
+            {
+                foreach (var Conversation in Model)
+                {
+                        <div class="col-md-8 offset-md-1">
+                            <a href="@Url.Action("GetConversations", "Conversations", new { id = Conversation.ID } )">
+                                <div class="notice notice-lg notice-info">
+                                    <strong><span class="fa fa-envelope"></span> @Conversation.Title</strong>
+                                    <span class="fa fa-clock-o" aria-hidden="true"></span>
+                                    <time class="timeago" datetime="@Conversation.Date">@Conversation.Date</time>
+
+                                </div>
+                            </a>
+                        </div>
+
+
+                    }
+                }
+
+            </div>
+        </div>
+    </div>

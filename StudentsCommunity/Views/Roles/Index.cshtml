@@ -1,0 +1,129 @@
+﻿@model IEnumerable<Microsoft.AspNet.Identity.EntityFramework.IdentityRole>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<style>
+    .animate {
+        -webkit-transition: all 0.5s ease-in-out;
+        -moz-transition: all 0.5s ease-in-out;
+        -o-transition: all 0.5s ease-in-out;
+        -ms-transition: all 0.5s ease-in-out;
+        transition: all 0.5s ease-in-out;
+        position: fixed;
+        top: 50px;
+        right: -100%;
+        padding-top: 65px;
+        padding-bottom: 15px;
+        height: 100%;
+        min-width: 240px;
+        text-align: left;
+        background-color: rgb(255, 255, 255);
+        box-shadow: -3px 0px 3px 0px rgba(160, 160, 160, 0.30);
+        z-index: 100;
+        overflow: auto;
+    }
+
+    .nav-controller {
+        position: fixed;
+        top: 60px;
+        right: 15px;
+        padding: 1px 6px 1px;
+        border: 5px solid #3c8dbc;
+        color: #3c8dbc;
+        border-radius: 25px;
+        font-size: 12pt;
+        cursor: pointer;
+        z-index: 300;
+    }
+
+    nav ~ .nav-controller > .controller-open {
+        display: inline-block;
+    }
+
+    nav ~ .nav-controller > .controller-close {
+        display: none;
+    }
+
+    nav.focus ~ .nav-controller > .controller-open {
+        display: none;
+    }
+
+    nav.focus ~ .nav-controller > .controller-close {
+        display: inline-block;
+    }
+
+
+    nav.focus {
+        right: 0px;
+    }
+
+    nav > .divider {
+        content: '';
+        border-bottom: 1px solid rgb(230, 230, 230);
+        max-height: 1px;
+        overflow: hidden;
+        margin: 15px 0px;
+    }
+
+    nav > h4,
+    nav > p,
+    nav > ul {
+        padding: 0px 10px;
+    }
+
+    nav > h4 {
+        font-family: 'Anton', sans-serif;
+    }
+
+    nav > ul {
+        list-style: none;
+    }
+
+        nav > ul > li {
+            margin: 5px 0px;
+        }
+
+            nav > ul > li > a {
+                color: rgb(190, 190, 190);
+            }
+
+                nav > ul > li > a:hover {
+                    font-size: 1.1em;
+                    font-weight: 700;
+                    color: #3c8dbc;
+                    text-decoration: none;
+                }
+</style>
+<p class="b1" style="width:150Px;">
+    @Html.ActionLink("Create New Role", "Create", new { @class = "btn btn-primary" })
+</p>
+
+<table class="table table-striped table-bordered table-inverse" style="width:100%">
+    <thead class="note">
+        <tr class="text-center">
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>Control</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+
+                <td class="text-center">
+                    <a class='btn btn-info btn-xs' href="@Url.Action("Details","Roles", new { id = item.Id })"><i class="fa fa-info"></i></a>
+                    <a href="@Url.Action("Delete","Roles", new { id = item.Id })" class="btn btn-danger btn-xs"><i class="fa fa-trash-o"></i></a>
+                    <a href="@Url.Action("Edit","Roles", new { id = item.Id })" class="btn btn-success btn-xs"><i class="fa fa-edit"></i></a>
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>

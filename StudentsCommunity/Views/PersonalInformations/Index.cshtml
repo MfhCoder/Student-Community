@@ -1,0 +1,158 @@
+﻿@using StudentsCommunity.Models;
+@using Microsoft.AspNet.Identity
+@using Microsoft.AspNet.Identity.EntityFramework;
+@{
+    ViewBag.Title = "Profile";
+}
+
+@{
+    var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+
+    var currentUser = manager.FindById(User.Identity.GetUserId());
+
+<div class="container main-secction">
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12 image-section">
+            <img src="~/img/PB.jpg">
+        </div>
+
+        <div class="row user-left-part">
+            <div class="col-md-3 col-sm-3 col-xs-12 user-profil-part pull-left">
+                <div class="row ">
+                    <div class="col-md-12 col-md-12-sm-12 col-xs-12 user-image text-center">
+                        <img src="~/Uploads/@currentUser.PersonalInformation.UserImage" class="rounded-circle">
+                    </div>
+                    <div class="col-md-12 col-sm-12 col-xs-12 user-detail-section1 text-center">
+                        <button class="btn btn-success btn-block follow" id="addClass" type="button">Contact me  <span class="fa fa-comment"></span></button>
+                    </div>
+                    <div class="row user-detail-row">
+                        <div class="col-md-12 col-sm-12 user-detail-section2 pull-left">
+                            <h4>info</h4><div class="border"></div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label>User Name</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <p>@currentUser.UserName</p>
+                                </div>
+                            </div>
+                             <div class="row">
+                                <div class="col-md-4">
+                                    <label>ID</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <p>@currentUser.PersonalInformation.StudentId</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label>Name</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <p>@currentUser.PersonalInformation.FullName</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label>Email</label>
+                                </div>
+                                <div class="col-md-6">
+
+                                    <p>@currentUser.Email</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label>Phone</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <p>@currentUser.PhoneNumber</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label>Skills</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <p>@currentUser.PersonalInformation.Skills</p>
+                                 </div>
+                            </div>
+                            <a href="@Url.Action("AddOrEdit","PersonalInformations")" class="btn btn-primary">Edit</a>
+                            <hr/>
+                            <a href="@Url.Action("EditProfile","Account")" class="btn btn-primary">change password</a>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9 col-sm-9 col-xs-12 pull-right profile-right-section">
+                <div class="row profile-right-section-row">
+                    <div class="col-md-12 profile-header">
+                        <div class="row">
+                            <div class="col-md-8 col-sm-6 col-xs-6 profile-header-section1 pull-left">
+                                <h1>My Courses</h1>
+                            </div>
+                            <div class="col-md-4 col-sm-6 col-xs-6 profile-header-section1 text-right pull-rigth">
+                                @if (User.IsInRole("Students"))
+                                {    <a class="btn btn-primary btn-block" href="@Url.Action("MyCourses","Enrollments")">Manage courses</a>
+
+                                }
+                                @if (User.IsInRole("Instructors"))
+
+                                {    <a class="btn btn-primary btn-block" href="@Url.Action("MyCourses","Courses")">Manage courses</a>
+
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="row">
+                            @{var list = (List<Courses>)Session["Courses"];
+                            }
+                            @foreach (var Course in list)
+                            {      <div class="col-md-8">
+                                <a href="@Url.Action("Details", "Courses", new { id = Course.Id } )">
+                                    <div class="notice notice-lg notice-info">
+                                        <strong>@Course.CourseName</strong>
+                                    </div>
+                                </a>
+                            </div>
+
+                            }
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+}
+
+<script src="~/Scripts/jquery-3.0.0.min.js"></script>
+
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $(function () {
+
+                var s = "@currentUser.PersonalInformation.Skills";
+                var match = s.split(', ')
+                console.log(match)
+                for (var a in match) {
+                    var variable = match[a]
+                    console.log(variable)
+                }
+            })
+
+            $("#addClass").click(function () {
+                $('#qnimate').addClass('popup-box-on');
+            });
+
+            $("#removeClass").click(function () {
+                $('#qnimate').removeClass('popup-box-on');
+            });
+        });
+    </script>
+}

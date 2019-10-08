@@ -1,0 +1,318 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/dataTables.bootstrap4.min.css" rel="stylesheet" />
+    <link href="~/Content/font-awesome.min.css" rel="stylesheet" />
+                             @*for tokenfield*@  
+    <link href="~/Content/jquery-ui.min.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-tokenfield.min.css" rel="stylesheet" />
+    <link href="~/Content/Site.css" rel="stylesheet" />
+
+
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-light" style="display:@ViewBag.displayNav">
+        <div class="container-fluid">
+            @*@if (Request.IsAuthenticated)
+            {<button type="button" id="sidebarCollapse" class="btn btn-info">
+                <i class="fa fa-align-left"></i>
+            </button>
+            }*@
+              <!-- Brand -->
+            @*<a class="navbar-brand" href="#"><span>FCIH</span> Community</a>*@
+
+            <a class="navbar-brand" href="#"><img src="~/img/L1.PNG"  style="margin:-10px auto -8px;"></a>
+            <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse"
+                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                <i class="fa fa-align-justify"></i>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                @Html.Partial("_LoginPartial")
+            </div>
+        </div>
+    </nav>
+    
+    <div class="wrapper">
+@*@if (User.IsInRole("Admins"))
+{
+        <nav class="animate">
+            <p><strong>Admin</strong></p>
+            <ul>
+                <li>
+                    @Html.ActionLink("Manage Roles", "Index")
+                </li>
+                <li>
+                    @Html.ActionLink("Manage Users", "UsersWithRoles")
+                </li>
+                <li>
+                    @Html.ActionLink("Manage Courses", "Index")
+                </li>
+                <li>
+                    @Html.ActionLink("Messages", "Index")
+                </li>
+            </ul>
+            <div class="divider"></div>
+            <h4>Thanks To</h4>
+        </nav>
+
+       
+        <div class="nav-controller">
+            <span class="[ fa fa-chevron-down ] controller-open"></span>
+            <span class="[ fa fa-remove ] controller-close"></span>
+        </div>
+        }*@
+
+
+        <!-- Sidebar  -->
+        @*<nav id="sidebar">
+            <div class="sidebar-header text-center">
+               <div class="row">
+                   <div class="col-md-8">
+                       <h3>Recent posts</h3>
+                   </div>
+                   <div class="col-md-4">
+                       <button class="b1">New Post</button>
+                   </div>
+               </div>
+             
+            </div>
+
+            <div class="media slide-post">
+                <img class="my-image" src="img/avatar.png" alt="Generic placeholder image">
+                <div class="media-body">
+                    <h5 class="mt-0">
+                        Ahmed <small class="pull-right text-muted">
+                            <span class="glyphicon glyphicon-time"></span>12 mins ago
+                        </small>
+                    </h5>
+                    Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin.
+                    Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc
+                    ac nisi vulputate fringilla.
+                </div>
+            </div>
+            <div class="media slide-post">
+                <img class="my-image" src="img/avatar2.png" alt="Generic placeholder image">
+                <div class="media-body">
+                    <h5 class="mt-0">
+                        hhhhh <small class="pull-right text-muted">
+                            <span class="glyphicon glyphicon-time"></span>12 mins ago
+                        </small>
+                    </h5>
+                    Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin.
+                    Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc
+                    ac nisi vulputate fringilla.
+                </div>
+            </div>
+            <div class="media slide-post">
+                <img class="my-image" src="img/avatar4.png" alt="Generic placeholder image">
+                <div class="media-body">
+                    <h5 class="mt-0">
+                        iiiii <small class="pull-right text-muted">
+                            <span class="glyphicon glyphicon-time"></span>12 mins ago
+                        </small>
+                    </h5>
+                    Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin.
+                    Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc
+                    ac nisi vulputate fringilla.
+                </div>
+            </div>
+            <div class="media slide-post">
+                <img class="my-image" src="img/avatar.png" alt="Generic placeholder image">
+                <div class="media-body">
+                    <h5 class="mt-0">
+                        Ahmed <small class="pull-right text-muted">
+                            <span class="glyphicon glyphicon-time"></span>12 mins ago
+                        </small>
+                    </h5>
+                    Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin.
+                    Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc
+                    ac nisi vulputate fringilla.
+                </div>
+            </div>
+            <div class="media slide-post">
+                <img class="my-image" src="img/avatar.png" alt="Generic placeholder image">
+                <div class="media-body">
+                    <h5 class="mt-0">
+                        Ahmed <small class="pull-right text-muted">
+                            <span class="glyphicon glyphicon-time"></span>12 mins ago
+                        </small>
+                    </h5>
+                    Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin.
+                    Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc
+                    ac nisi vulputate fringilla.
+                </div>
+            </div>
+
+        </nav>*@
+
+        <!-- Page Content  -->
+        <div id="content">
+            @RenderBody()
+        </div>
+    </div>
+
+    <section id="footer" style="display:@ViewBag.displayNav" >
+        <div class="container">
+            <div class="row text-center text-xs-center text-sm-left text-md-left">
+                <div class="col-xs-12 col-sm-4 col-md-4">
+                    <h5>Quick links</h5>
+                    <ul class="list-unstyled quick-links">
+                        <li><a href="~/Home/Index"><i class="fa fa-angle-double-right"></i>Home</a></li>
+                        <li><a href="~/Home/Contact"><i class="fa fa-angle-double-right"></i>About</a></li>
+                        <li><a href="~/Home/About"><i class="fa fa-angle-double-right"></i>Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-xs-12 col-sm-4 col-md-4">
+                    <h5>Quick links</h5>
+                    <ul class="list-unstyled quick-links">
+                        <li><a href="~/Home/Index"><i class="fa fa-angle-double-right"></i>Home</a></li>
+                        <li><a href="~/Home/Contact"><i class="fa fa-angle-double-right"></i>About</a></li>
+                        <li><a href="~/Home/About"><i class="fa fa-angle-double-right"></i>Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-xs-12 col-sm-4 col-md-4">
+                    <h5>Quick links</h5>
+                    <ul class="list-unstyled quick-links">
+                        <li><a href="~/Home/Index"><i class="fa fa-angle-double-right"></i>Home</a></li>
+                        <li><a href="~/Home/Contact"><i class="fa fa-angle-double-right"></i>About</a></li>
+                        <li><a href="~/Home/About"><i class="fa fa-angle-double-right"></i>Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-12 mt-2 mt-sm-5">
+                    <ul class="list-unstyled list-inline social text-center">
+                        <li class="list-inline-item"><a href="#"><i class="fa fa-facebook"></i></a></li>
+                        <li class="list-inline-item"><a href="#"><i class="fa fa-twitter"></i></a></li>
+                        <li class="list-inline-item"><a href="#"><i class="fa fa-google-plus"></i></a></li>
+                        <li class="list-inline-item"><a href="#"><i class="fa fa-envelope"></i></a></li>
+                    </ul>
+                </div>
+                </hr>
+            </div>
+        </div>
+    </section>
+
+   
+    @*@Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")*@
+    <script src="~/Scripts/jquery-3.0.0.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/jquery-ui.min.js"></script>
+    <script src="~/Scripts/bootstrap-tokenfield.js"></script>
+    @*<script src="~/Scripts/dataTables.bootstrap4.min.js"></script>
+    <script src="~/Scripts/jquery.dataTables.min.js"></script>
+    <script src="~/Scripts/popper.min.js"></script>*@
+    <script src="~/Scripts/jquery.signalR-2.4.0.js"></script>
+    <script src="/signalr/hubs"></script>
+
+
+    @* Add jquery code for Get Notification & setup signalr *@
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#example').DataTable();
+            $('#sidebarCollapse').on('click', function () {
+                $('#sidebar').toggleClass('active');
+
+            });
+            $('.comment-container').click(function () {
+                $(this).addClass('toggled');
+
+                $(document).click(function () {
+                    $('.comment-container').removeClass('toggled');
+                });
+
+                $('.comment-container').click(function (e) {
+                    e.stopPropagation();
+                });
+
+                $(this).find('textarea').focus();
+
+            })
+
+        });
+        $(function () {
+
+            @*// Click on notification icon for show notification
+            $('span.noti').click(function (e) {
+                e.stopPropagation();
+                $('.noti-content').show();
+                var count = 0;
+                count = parseInt($('span.count').html()) || 0;
+                //only load notification if not already loaded
+                //if (count > 0) {
+                    updateNotification();
+                //}
+                $('span.count', this).html('&nbsp;');
+            })
+            // hide notifications
+            $('html').click(function () {
+                $('.noti-content').hide();
+            })
+            // update notification
+            function updateNotification() {
+                $('#notiContent').empty();
+                $('#notiContent').append($('<li>Loading...</li>'));
+                $.ajax({
+                    type: 'GET',
+                    url: '@Url.Action("GetNotificationContacts", "Home")',
+                    success: function (response) {
+                        console.log(response);
+
+                        $('#notiContent').empty();
+                        if (response.length  == 0) {
+                            $('#notiContent').append($('<li>No data available</li>'));
+                        }
+                        $.each(response, function (index, value) {
+                            $('#notiContent').append($('<li>New contact : ' + value.Message + ' (' + value.Id + ') added</li>'));
+                        });
+                    },
+                    error: function (error) {
+                        console.log(error);
+                    }
+                })
+            }*@
+            // update notification count
+            function updateNotificationCount() {
+                var count = 0;
+                count = parseInt($('span.count').html()) || 0;
+                count++;
+                $('span.count').html(count);
+                $('span.count').css("display", "block");
+            }
+            // signalr js code for start hub and send receive notification
+            var notificationHub = $.connection.notificationHub;
+            $.connection.hub.start().done(function () {
+                console.log('Notification hub started');
+            });
+            //signalr method for push server message to client
+            notificationHub.client.notify = function (message) {
+                if (message && message.toLowerCase() == "added") {
+                    updateNotificationCount();
+                }
+            }
+
+        })
+
+        $(function () {
+            $('.animate,.nav-controller').on('click', function (event) {
+                $('nav').toggleClass('focus');
+            });
+            $('.animate,.nav-controller').on('mouseover', function (event) {
+                $('nav').addClass('focus');
+            }).on('mouseout', function (event) {
+                $('nav').removeClass('focus');
+            })
+        })
+    </script>
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>

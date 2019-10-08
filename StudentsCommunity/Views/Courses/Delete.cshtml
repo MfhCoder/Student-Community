@@ -1,0 +1,52 @@
+﻿@model StudentsCommunity.Models.Courses
+
+@{
+    ViewBag.Title = "Delete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h3 class="alert-danger">Are you sure you want to delete this Course? <i class="fa fa-warning"></i></h3>
+<div>
+    <h4 class="note">Course Information</h4>
+
+    <table class="table table-striped table-bordered table-inverse" style="width:100%">
+        <tbody>
+
+                <tr>
+                    <td>
+                        @Html.DisplayNameFor(model => model.CourseName)                    </td>
+                    <td>
+                        @Html.DisplayFor(model => model.CourseName)
+                    </td>
+                </tr>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.CourseCode)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => model.CourseCode)
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.GroupNum)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => model.GroupNum)
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-danger" /> |
+            <a href="@Url.Action("MyCourses", "Courses")" class='btn btn-info btn-xs'>
+                <i class="fa fa-arrow-left"></i>
+                back
+            </a>
+        </div>
+    }
+</div>

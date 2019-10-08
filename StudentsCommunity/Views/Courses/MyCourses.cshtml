@@ -1,0 +1,58 @@
+﻿@model IEnumerable<StudentsCommunity.Models.Courses>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="text-center">Manage Courses</h2>
+
+<p>
+    <a href="@Url.Action("AddCourse", "Courses")" class='b1'>
+        <i class="fa fa-plus">Add New Course</i>
+    </a>
+</p>
+<table class="table table-striped table-bordered table-inverse" style="width:100%">
+    <thead class="note">
+        <tr>
+            <th>
+                Course Name
+            </th>
+            <th>
+                Course Code
+            </th>
+            <th>
+                Group Num
+            </th>
+            <th>Manage</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model)
+        {
+            <tr class="text-center">
+                <td>
+                    @Html.DisplayFor(modelItem => item.CourseName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CourseCode)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GroupNum)
+                </td>
+                <td class="text-center">
+                    <a href="@Url.Action("Delete", "Courses", new { id = item.Id } )" class='btn btn-danger btn-xs'>
+                        <i class="fa fa-trash"></i>
+                    </a>
+                    <a href="@Url.Action("Edit", "Courses", new { id = item.Id } )" class='btn btn-success btn-xs'>
+                       <i class="fa fa-edit"></i>
+                    </a>
+                    <a href="@Url.Action("Details", "Courses", new { id = item.Id } )" class='btn btn-info btn-xs'>
+                        <i class="fa fa-info"></i>
+                    </a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
